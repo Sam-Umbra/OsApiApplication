@@ -30,9 +30,7 @@ public class ClienteController {
     
     @GetMapping("/clientes")
     public List<Cliente> listas() {
-        //return clienteRepository.findAll();
-        // return clienteRepository.findByNome("KGe");
-        return clienteRepository.findByNomeContaining("K");
+        return clienteRepository.findAll();
     }
     
     @GetMapping("/clientes/{clienteID}")
