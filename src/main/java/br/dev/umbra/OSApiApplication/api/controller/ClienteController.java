@@ -5,11 +5,13 @@
 package br.dev.umbra.OSApiApplication.api.controller;
 
 import br.dev.umbra.OSApiApplication.domain.model.Cliente;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import java.util.ArrayList;
+import br.dev.umbra.OSApiApplication.domain.repository.ClienteRepository;
 import java.util.List;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -19,15 +21,26 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ClienteController {
     
-    @PersistenceContext
-    private EntityManager manager;
+    @Autowired
+    private ClienteRepository clienteRepository;
     
     @GetMapping("/clientes")
     public List<Cliente> listas() {
+        //return clienteRepository.findAll();
+        // return clienteRepository.findByNome("KGe");
+        return clienteRepository.findByNomeContaining("K");
+    }
+    
+    @GetMapping("/clientes/{clienteID}")
+    public ResponseEntity<Cliente> buscar(@PathVariable Long clienteID) {
         
-        // Linguagem JPQL (tipo SQL só que do Jakarta)
-        return manager.createQuery("from Cliente", Cliente.class)
-                .getResultList();
+        Optional<Cliente> cliente = clienteRepository.findById(clienteID);
+        
+        if (cliente.isPresent()) {
+            return ResponseEntity.ok(cliente.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
         
     }
     
