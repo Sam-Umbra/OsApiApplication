@@ -77,7 +77,7 @@ public class OrdemServicoController {
         } else {
             ordemServico.setId(ordemID);
             ordemServico = ordemServicoRepository.save(ordemServico);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok(ordemServico);
         }
     }
     
