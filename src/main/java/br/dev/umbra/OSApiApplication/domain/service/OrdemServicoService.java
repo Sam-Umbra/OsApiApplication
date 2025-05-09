@@ -35,37 +35,42 @@ public class OrdemServicoService {
     
     public OrdemServico finalizar(OrdemServico ordemServico) {
         
-        if(ordemServico.getStatus().equals(StatusOrdemServico.FINALIZADA)) {
-            
-            throw new DomainException("A ordem já foi FINALIZADA!");
-            
-        } else if(ordemServico.getStatus().equals(StatusOrdemServico.CANCELADA)) {
-            
-            throw new DomainException("A ordem está CANCELADA!");
-            
-        } else{
-            ordemServico.setStatus(StatusOrdemServico.FINALIZADA);
-            ordemServico.setDataFinalizacao(LocalDateTime.now());
+        StatusOrdemServico status = ordemServico.getStatus();
+        
+        switch (status) {
+            case FINALIZADA:
+                throw new DomainException("A ordem já foi FINALIZADA!");
+                
+            case CANCELADA:
+                throw new DomainException("A ordem está CANCELADA!");
+                
+            default:
+                ordemServico.setStatus(StatusOrdemServico.FINALIZADA);
+                ordemServico.setDataFinalizacao(LocalDateTime.now());
 
-            return ordemServicoRepository.save(ordemServico);
+                return ordemServicoRepository.save(ordemServico);
         }
+        
     }
     
     public OrdemServico cancelar(OrdemServico ordemServico) {
-        if(ordemServico.getStatus().equals(StatusOrdemServico.CANCELADA)) {
-            
-            throw new DomainException("A ordem já for CANCELADA!");
-            
-        } else if(ordemServico.getStatus().equals(StatusOrdemServico.FINALIZADA)) {
-            
-            throw new DomainException("A ordem está FINALIZADA!");
-            
-        } else {
-            ordemServico.setStatus(StatusOrdemServico.CANCELADA);
-            ordemServico.setDataFinalizacao(LocalDateTime.now());
-            
-            return ordemServicoRepository.save(ordemServico);
+        
+        StatusOrdemServico status = ordemServico.getStatus();
+        
+        switch (status) {
+            case FINALIZADA:
+                throw new DomainException("A ordem já foi FINALIZADA!");
+                
+            case CANCELADA:
+                throw new DomainException("A ordem está CANCELADA!");
+                
+            default:
+                ordemServico.setStatus(StatusOrdemServico.CANCELADA);
+                ordemServico.setDataFinalizacao(LocalDateTime.now());
+
+                return ordemServicoRepository.save(ordemServico);
         }
+        
     }
     
 }

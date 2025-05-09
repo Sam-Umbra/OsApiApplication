@@ -82,20 +82,21 @@ public class OrdemServicoController {
         } else {
             
             OrdemServico ordemStatusVerificar = ordemServicoRepository.findById(ordemID).get();
+            StatusOrdemServico status = ordemStatusVerificar.getStatus();
             
-            if(ordemStatusVerificar.getStatus().equals(StatusOrdemServico.FINALIZADA)) {
-            
-            throw new DomainException("A ordem está FINALIZADA!");
-            
-            } else if(ordemStatusVerificar.getStatus().equals(StatusOrdemServico.CANCELADA)) {
-
+            switch (status) {
+            case FINALIZADA:
+                throw new DomainException("A ordem já foi FINALIZADA!");
+                
+            case CANCELADA:
                 throw new DomainException("A ordem está CANCELADA!");
-
-            } else {
+                
+            default:
                 ordemServico.setId(ordemID);
                 ordemServico = ordemServicoRepository.save(ordemServico);
                 return ResponseEntity.ok(ordemServico);
             }
+            
         }
     }
     
